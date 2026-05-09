@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: unfyd-pivot
+  namespace: unfyd-pivot
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "60m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts: [ api.unfyd.io, app.unfyd.io ]
+      secretName: unfyd-pivot-tls
+  rules:
+    - host: api.unfyd.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: backend
+                port: { number: 8000 }
+    - host: app.unfyd.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port: { number: 3000 }

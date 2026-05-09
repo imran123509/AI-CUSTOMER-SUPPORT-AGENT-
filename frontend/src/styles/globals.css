@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg: #ffffff;
+    --fg: #0f172a;
+    --muted: #6b7280;
+    --card: #f8fafc;
+    --border: #e2e8f0;
+  }
+
+  .dark {
+    --bg: #0b1020;
+    --fg: #e8ecf3;
+    --muted: #9aa3b2;
+    --card: #131a30;
+    --border: #1f2740;
+  }
+
+  html, body {
+    background: var(--bg);
+    color: var(--fg);
+  }
+
+  body {
+    font-family: "Trebuchet MS", "Segoe UI Symbol", system-ui, -apple-system, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-family: "Montserrat", system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-xl border p-4 shadow-sm;
+    background: var(--card);
+    border-color: var(--border);
+  }
+  .btn {
+    @apply rounded-lg px-4 py-2 text-sm font-medium transition;
+  }
+  .btn-primary {
+    @apply btn bg-brand text-white hover:bg-brand-700 disabled:opacity-50;
+  }
+  .btn-ghost {
+    @apply btn hover:bg-gray-100 dark:hover:bg-white/5;
+  }
+  .input {
+    @apply w-full rounded-lg border bg-transparent px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand;
+    border-color: var(--border);
+  }
+}

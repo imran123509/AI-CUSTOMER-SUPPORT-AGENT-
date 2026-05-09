@@ -1,0 +1,11 @@
+{
+  "title": "UNFYD.PIVOT Overview",
+  "panels": [
+    { "type": "stat",  "title": "Active conversations" },
+    { "type": "graph", "title": "AI response time (p50/p95)" },
+    { "type": "graph", "title": "Tickets by status" },
+    { "type": "graph", "title": "Tokens used / hour" }
+  ],
+  "schemaVersion": 38,
+  "version": 1
+}

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: chromadb, namespace: unfyd-pivot }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: chromadb } }
+  template:
+    metadata: { labels: { app: chromadb } }
+    spec:
+      containers:
+        - name: chromadb
+          image: chromadb/chroma:0.5.5
+          ports: [{ containerPort: 8000 }]
+          env:
+            - { name: IS_PERSISTENT, value: "TRUE" }
+            - { name: ANONYMIZED_TELEMETRY, value: "FALSE" }
+          volumeMounts:
+            - { name: data, mountPath: /chroma/chroma }
+      volumes:
+        - name: data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata: { name: chromadb, namespace: unfyd-pivot }
+spec:
+  selector: { app: chromadb }
+  ports: [{ port: 8000, targetPort: 8000 }]
