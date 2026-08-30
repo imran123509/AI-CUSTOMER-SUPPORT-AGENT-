@@ -7,6 +7,7 @@ services.
 from __future__ import annotations
 
 import json
+import re
 import time
 from typing import AsyncIterator, List
 from uuid import UUID
@@ -21,6 +22,21 @@ from app.repositories.conversation import ConversationRepository, MessageReposit
 from app.services import gemini_client, memory, prompts, rag_service
 
 logger = get_logger(__name__)
+
+
+_FENCE_RE = re.compile(r"^\s*```(?:json)?\s*(.*?)\s*```\s*$", re.DOTALL)
+
+
+def _json_payload(raw: str) -> str:
+    """Strip a markdown code fence so `json.loads` sees bare JSON.
+
+    Gemini routinely answers a "reply with JSON" prompt as ```json ... ```.
+    Without stripping the fence every json.loads below fails and the crude
+    text fallback runs instead, which turned a tag list into
+    ["```json", "[", "\"order-delay\""].
+    """
+    match = _FENCE_RE.match(raw)
+    return match.group(1) if match else raw.strip()
 
 
 def _history_for_gemini(window: list[dict]) -> List[dict]:
@@ -190,7 +206,7 @@ async def classify_priority(text: str) -> str:
 async def generate_tags(text: str) -> list[str]:
     raw = await _one_shot(prompts.TAG_SYSTEM, text)
     try:
-        parsed = json.loads(raw)
+        parsed = json.loads(_json_payload(raw))
         if isinstance(parsed, list):
             return [str(t).lower() for t in parsed][:5]
     except Exception:
@@ -205,7 +221,7 @@ async def summarize_conversation(transcript: str) -> str:
 async def smart_replies(transcript: str) -> list[str]:
     raw = await _one_shot(prompts.SMART_REPLY_SYSTEM, transcript)
     try:
-        parsed = json.loads(raw)
+        parsed = json.loads(_json_payload(raw))
         if isinstance(parsed, list):
             return [str(s) for s in parsed[:3]]
     except Exception:
@@ -217,7 +233,7 @@ async def smart_replies(transcript: str) -> list[str]:
 async def generate_faq(transcript: str) -> dict:
     raw = await _one_shot(prompts.FAQ_SYSTEM, transcript)
     try:
-        parsed = json.loads(raw)
+        parsed = json.loads(_json_payload(raw))
         if isinstance(parsed, dict) and "question" in parsed:
             return parsed
     except Exception:

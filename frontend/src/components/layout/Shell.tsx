@@ -28,7 +28,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
     <div className="flex min-h-screen">
       <aside className="w-60 border-r p-4" style={{ borderColor: "var(--border)" }}>
         <div className="mb-8 px-2">
-          <Link href="/dashboard" className="font-heading text-xl">UNFYD.PIVOT</Link>
+          <Link href="/dashboard" className="font-heading text-xl">AI Agent</Link>
         </div>
         <nav className="space-y-1">
           {NAV.map(({ href, label, Icon }) => {

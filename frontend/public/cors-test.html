@@ -1,0 +1,79 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>CORS diagnostic</title>
+<style>
+  body { font: 14px/1.5 system-ui, sans-serif; margin: 2rem; max-width: 60rem; }
+  pre  { background: #1113; padding: .75rem; border-radius: 6px; white-space: pre-wrap; }
+  .ok   { color: #158a3a; font-weight: 600; }
+  .fail { color: #c02626; font-weight: 600; }
+</style>
+<h1>CORS diagnostic</h1>
+<p>Page origin: <code id="origin"></code> &rarr; API: <code id="api"></code></p>
+<p>
+  <button id="run">Run both tests</button>
+  Each test POSTs to <code>/api/v1/auth/register</code> with a throwaway email.
+</p>
+<pre id="out">Click "Run both tests".</pre>
+<script>
+  // Deliberately hard-coded: this page exists to test the network path, not the app config.
+  var API = "http://localhost:8000";
+  document.getElementById("origin").textContent = window.location.origin;
+  document.getElementById("api").textContent = API;
+
+  var out = document.getElementById("out");
+  function log(msg) { out.textContent += msg + "\n"; }
+
+  function body() {
+    var stamp = Date.now() + "" + Math.floor(Math.random() * 1000);
+    return JSON.stringify({
+      email: "corstest" + stamp + "@example.com",
+      password: "Test1234!",
+      full_name: "CORS Test",
+      organization_name: "CORS Test Org " + stamp
+    });
+  }
+
+  // fetch() is NOT patched by XHR-interceptor extensions.
+  function viaFetch() {
+    return fetch(API + "/api/v1/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: body()
+    }).then(function (r) {
+      log("1. fetch()  -> HTTP " + r.status + "   [PASS] browser allowed the response");
+    }).catch(function (e) {
+      log("1. fetch()  -> BLOCKED: " + e.message);
+    });
+  }
+
+  // XMLHttpRequest is what axios uses in the browser, and what extensions patch.
+  function viaXhr() {
+    return new Promise(function (resolve) {
+      var x = new XMLHttpRequest();
+      x.open("POST", API + "/api/v1/auth/register");
+      x.setRequestHeader("Content-Type", "application/json");
+      x.onload = function () {
+        log("2. XHR      -> HTTP " + x.status + "   [PASS] browser allowed the response");
+        resolve();
+      };
+      x.onerror = function () {
+        log("2. XHR      -> BLOCKED (status " + x.status + ") - this is the CORS error you saw");
+        resolve();
+      };
+      x.send(body());
+    });
+  }
+
+  document.getElementById("run").onclick = function () {
+    out.textContent = "";
+    log("XMLHttpRequest patched by an extension: " +
+        (/native code/.test(String(window.XMLHttpRequest)) ? "no" : "YES <-- suspect"));
+    log("");
+    viaFetch().then(viaXhr).then(function () {
+      log("");
+      log("Both PASS  -> server + browser are fine; the bug is in the app code.");
+      log("fetch PASS, XHR BLOCKED -> a browser extension is breaking XHR. Disable it.");
+      log("Both BLOCKED -> the request is not reaching this backend at all.");
+    });
+  };
+</script>

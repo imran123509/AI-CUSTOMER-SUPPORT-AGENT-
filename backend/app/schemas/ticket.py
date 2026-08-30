@@ -5,6 +5,7 @@ from datetime import datetime
 from pydantic import BaseModel, Field
 
 from app.models.ticket import TicketPriority, TicketStatus
+from app.schemas._types import UUIDStr
 
 
 class TicketCreate(BaseModel):
@@ -12,8 +13,8 @@ class TicketCreate(BaseModel):
     description: str | None = None
     priority: TicketPriority = TicketPriority.NORMAL
     category: str | None = None
-    requester_id: str | None = None
-    conversation_id: str | None = None
+    requester_id: UUIDStr | None = None
+    conversation_id: UUIDStr | None = None
     tags: list[str] = []
 
 
@@ -23,16 +24,16 @@ class TicketUpdate(BaseModel):
     priority: TicketPriority | None = None
     status: TicketStatus | None = None
     category: str | None = None
-    assignee_id: str | None = None
+    assignee_id: UUIDStr | None = None
     tags: list[str] | None = None
 
 
 class TicketOut(BaseModel):
-    id: str
-    organization_id: str
-    conversation_id: str | None
-    requester_id: str | None
-    assignee_id: str | None
+    id: UUIDStr
+    organization_id: UUIDStr
+    conversation_id: UUIDStr | None
+    requester_id: UUIDStr | None
+    assignee_id: UUIDStr | None
     subject: str
     description: str | None
     summary: str | None
@@ -57,9 +58,9 @@ class TicketNoteCreate(BaseModel):
 
 
 class TicketNoteOut(BaseModel):
-    id: str
-    ticket_id: str
-    author_id: str | None
+    id: UUIDStr
+    ticket_id: UUIDStr
+    author_id: UUIDStr | None
     body: str
     is_internal: bool
     created_at: datetime

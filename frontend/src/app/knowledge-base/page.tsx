@@ -35,7 +35,7 @@ export default function KnowledgeBasePage() {
   return (
     <div>
       <h1 className="font-heading text-2xl">Knowledge Base</h1>
-      <p className="opacity-70">Upload PDFs, DOCX, TXT, CSV — UNFYD.PIVOT will index them for grounded AI replies.</p>
+      <p className="opacity-70">Upload PDFs, DOCX, TXT, CSV — AI Agent will index them for grounded AI replies.</p>
 
       <div className="mt-6 grid grid-cols-[260px_1fr] gap-4">
         <div className="card">

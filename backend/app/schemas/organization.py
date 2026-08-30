@@ -3,10 +3,11 @@ from __future__ import annotations
 from pydantic import BaseModel, Field
 
 from app.models.organization import MembershipRole
+from app.schemas._types import UUIDStr
 
 
 class OrganizationOut(BaseModel):
-    id: str
+    id: UUIDStr
     name: str
     slug: str
     plan: str
@@ -15,9 +16,9 @@ class OrganizationOut(BaseModel):
 
 
 class MembershipOut(BaseModel):
-    id: str
-    organization_id: str
-    user_id: str
+    id: UUIDStr
+    organization_id: UUIDStr
+    user_id: UUIDStr
     role: MembershipRole
 
     model_config = {"from_attributes": True}

@@ -1,4 +1,4 @@
-# UNFYD.PIVOT — AI Customer Support Platform
+# AI Agent — AI Customer Support Platform
 
 A production-grade, multi-tenant AI customer support SaaS combining Intercom/Zendesk-style ticketing with modern AI agents, RAG knowledge bases, and real-time chat.
 
@@ -101,4 +101,4 @@ locust -f scripts/load_test.py --host http://localhost:8000
 
 ## License
 
-Proprietary — UNFYD.PIVOT.
+Proprietary — AI Agent.

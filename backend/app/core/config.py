@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     )
 
     # General
-    app_name: str = "UNFYD.PIVOT"
+    app_name: str = "AI Agent"
     app_env: Literal["development", "staging", "production"] = "development"
     app_debug: bool = True
     app_host: str = "0.0.0.0"

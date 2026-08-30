@@ -36,7 +36,7 @@ export default function LoginPage() {
   return (
     <main className="flex min-h-screen items-center justify-center p-8">
       <form onSubmit={onSubmit} className="card w-full max-w-md space-y-4">
-        <h1 className="font-heading text-2xl">Sign in to UNFYD.PIVOT</h1>
+        <h1 className="font-heading text-2xl">Sign in to AI Agent</h1>
         <input
           className="input"
           placeholder="you@company.com"

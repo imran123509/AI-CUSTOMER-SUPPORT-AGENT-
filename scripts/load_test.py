@@ -1,4 +1,4 @@
-"""Locust load test for UNFYD.PIVOT.
+"""Locust load test for AI Agent.
 
 Usage:
     pip install locust

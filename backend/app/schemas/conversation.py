@@ -7,12 +7,13 @@ from pydantic import BaseModel
 
 from app.models.conversation import ConversationStatus
 from app.models.message import MessageRole
+from app.schemas._types import UUIDStr
 
 
 class MessageOut(BaseModel):
-    id: str
-    conversation_id: str
-    sender_id: str | None
+    id: UUIDStr
+    conversation_id: UUIDStr
+    sender_id: UUIDStr | None
     role: MessageRole
     content: str
     tokens: int | None = None
@@ -24,10 +25,10 @@ class MessageOut(BaseModel):
 
 
 class ConversationOut(BaseModel):
-    id: str
-    organization_id: str
-    user_id: str | None
-    assigned_agent_id: str | None
+    id: UUIDStr
+    organization_id: UUIDStr
+    user_id: UUIDStr | None
+    assigned_agent_id: UUIDStr | None
     title: str | None
     status: ConversationStatus
     summary: str | None
@@ -56,10 +57,10 @@ class SendMessageRequest(BaseModel):
 
 
 class SmartReplyRequest(BaseModel):
-    conversation_id: str
+    conversation_id: UUIDStr
     last_n: int = 6
 
 
 class HandoffRequest(BaseModel):
-    target_agent_id: str | None = None
+    target_agent_id: UUIDStr | None = None
     reason: str | None = None

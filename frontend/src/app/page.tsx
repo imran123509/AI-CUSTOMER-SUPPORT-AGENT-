@@ -4,7 +4,7 @@ export default function HomePage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-8">
       <div className="max-w-2xl text-center">
-        <h1 className="font-heading text-5xl font-bold tracking-tight">UNFYD.PIVOT</h1>
+        <h1 className="font-heading text-5xl font-bold tracking-tight">AI Agent</h1>
         <p className="mt-3 text-xl opacity-80">
           AI-powered customer support, built for scale.
         </p>

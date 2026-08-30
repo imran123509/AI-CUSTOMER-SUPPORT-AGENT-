@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "../styles/globals.css";
 
 export const metadata: Metadata = {
-  title: "UNFYD.PIVOT — AI Customer Support",
+  title: "AI Agent",
   description: "AI-powered customer support platform",
 };
 

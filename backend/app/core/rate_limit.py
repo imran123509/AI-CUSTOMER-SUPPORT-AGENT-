@@ -3,9 +3,13 @@
 Used as a FastAPI dependency on heavy/AI endpoints to protect upstream
 services and our own quota.
 """
-from __future__ import annotations
+# NOTE: no `from __future__ import annotations` here on purpose.  RateLimiter is
+# used as a FastAPI dependency via its instance `__call__`; FastAPI resolves
+# annotations through `call.__globals__`, which an instance does not have, so a
+# stringified `Request` annotation would fail to resolve at import time.
 
 import time
+from typing import Optional
 
 from fastapi import Request
 
@@ -17,7 +21,7 @@ _settings = get_settings()
 
 
 class RateLimiter:
-    def __init__(self, *, per_minute: int | None = None, key_prefix: str = "rl"):
+    def __init__(self, *, per_minute: Optional[int] = None, key_prefix: str = "rl"):
         self.per_minute = per_minute or _settings.rate_limit_per_minute
         self.key_prefix = key_prefix
         self.window = 60

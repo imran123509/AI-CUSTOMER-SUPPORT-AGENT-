@@ -27,9 +27,19 @@ async def publish(stream: str, event: dict[str, Any]) -> str:
 
 
 async def ensure_group(stream: str, group: str) -> None:
+    """Create the consumer group, starting at the oldest retained entry.
+
+    The start id must be "0", not "$".  "$" anchors a brand-new group to the
+    tail of the stream, so anything published before the worker first ran is
+    never delivered -- a document uploaded while the worker was down stayed
+    PENDING forever with no error anywhere.  Starting at "0" makes the group
+    drain the retained backlog, which is what a durable work queue owes its
+    producers.  Creation happens once; an existing group keeps its own
+    last-delivered-id and is untouched (BUSYGROUP below).
+    """
     redis = await get_redis()
     try:
-        await redis.xgroup_create(stream, group, id="$", mkstream=True)
+        await redis.xgroup_create(stream, group, id="0", mkstream=True)
     except Exception as exc:  # group already exists is fine
         if "BUSYGROUP" not in str(exc):
             raise

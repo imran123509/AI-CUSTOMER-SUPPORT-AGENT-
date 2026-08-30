@@ -33,7 +33,7 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(
-    title="UNFYD.PIVOT API",
+    title="AI Agent API",
     description="AI Customer Support SaaS — multi-tenant FastAPI backend",
     version="0.1.0",
     default_response_class=ORJSONResponse,
@@ -44,15 +44,23 @@ app = FastAPI(
 )
 
 # ----------------------------- middleware ----------------------------------
+# NOTE: order matters.  Starlette applies middleware outermost-last, so
+# CORSMiddleware is added *after* RequestContextMiddleware to keep it on the
+# outside.  If it sat inside, an unhandled 500 would bubble past it to
+# ServerErrorMiddleware and come back without CORS headers -- the browser would
+# then report a misleading "CORS error" instead of surfacing the real failure.
+app.add_middleware(RequestContextMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origin_list,
+    # Accept every loopback origin regardless of port, so the app works whether
+    # it is opened on localhost:3000, 127.0.0.1:3000, or an alternate dev port.
+    allow_origin_regex=r"^http://(localhost|127\.0\.0\.1)(:\d+)?$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
     expose_headers=["x-request-id"],
 )
-app.add_middleware(RequestContextMiddleware)
 
 
 # ----------------------------- error handlers ------------------------------

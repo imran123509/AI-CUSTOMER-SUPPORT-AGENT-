@@ -35,6 +35,15 @@ AsyncSessionLocal = async_sessionmaker(
 class Base(DeclarativeBase):
     """Declarative base shared by every ORM model."""
 
+    # Fetch server-generated values (created_at/updated_at, which use
+    # server_default/onupdate=func.now()) inline via RETURNING.  SQLAlchemy's
+    # default of "auto" only does this for INSERT, so after an UPDATE the
+    # attribute is left expired and reading it emits a lazy SELECT.  Under
+    # asyncio that lazy load happens outside the greenlet and raises
+    # MissingGreenlet -- which surfaced as a 500 whenever a response model
+    # serialised a row that had just been updated.
+    __mapper_args__ = {"eager_defaults": True}
+
 
 async def get_db() -> AsyncIterator[AsyncSession]:
     """FastAPI dependency yielding an async DB session."""

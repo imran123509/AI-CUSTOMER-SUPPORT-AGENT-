@@ -1,5 +1,5 @@
 {
-  "title": "UNFYD.PIVOT Overview",
+  "title": "AI Agent Overview",
   "panels": [
     { "type": "stat",  "title": "Active conversations" },
     { "type": "graph", "title": "AI response time (p50/p95)" },

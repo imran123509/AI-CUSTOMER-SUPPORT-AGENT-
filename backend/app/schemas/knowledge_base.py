@@ -5,6 +5,7 @@ from datetime import datetime
 from pydantic import BaseModel
 
 from app.models.knowledge_base import DocumentStatus
+from app.schemas._types import UUIDStr
 
 
 class KnowledgeBaseCreate(BaseModel):
@@ -13,8 +14,8 @@ class KnowledgeBaseCreate(BaseModel):
 
 
 class KnowledgeBaseOut(BaseModel):
-    id: str
-    organization_id: str
+    id: UUIDStr
+    organization_id: UUIDStr
     name: str
     description: str | None
     created_at: datetime
@@ -23,8 +24,8 @@ class KnowledgeBaseOut(BaseModel):
 
 
 class DocumentOut(BaseModel):
-    id: str
-    knowledge_base_id: str
+    id: UUIDStr
+    knowledge_base_id: UUIDStr
     filename: str
     mime_type: str
     size_bytes: int
@@ -39,12 +40,12 @@ class DocumentOut(BaseModel):
 class SemanticSearchRequest(BaseModel):
     query: str
     top_k: int | None = None
-    knowledge_base_id: str | None = None
+    knowledge_base_id: UUIDStr | None = None
 
 
 class SemanticSearchHit(BaseModel):
-    chunk_id: str
-    document_id: str
+    chunk_id: UUIDStr
+    document_id: UUIDStr
     document_name: str
     score: float
     content: str

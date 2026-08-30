@@ -31,7 +31,11 @@ class KnowledgeBase(UUIDPKMixin, TimestampMixin, Base):
     )
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
-    chroma_collection: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
+    # Not unique: rag_service namespaces Chroma collections per organization
+    # (see rag_service._collection_name), so every knowledge base in an org
+    # legitimately shares one collection name.  A UNIQUE constraint here meant
+    # the second knowledge base in any org failed with a unique violation.
+    chroma_collection: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
 
     documents: Mapped[List["Document"]] = relationship(
         back_populates="knowledge_base", cascade="all, delete-orphan"

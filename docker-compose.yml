@@ -1,7 +1,7 @@
 version: "3.9"
 
 # ==============================================================================
-# UNFYD.PIVOT — Local development stack
+# AI Agent — Local development stack
 # Brings up: postgres, redis, chromadb, backend, worker, frontend, nginx
 # ==============================================================================
 
@@ -113,7 +113,7 @@ services:
     environment:
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
       NEXT_PUBLIC_WS_URL: ${NEXT_PUBLIC_WS_URL:-ws://localhost:8000/ws}
-      NEXT_PUBLIC_APP_NAME: UNFYD.PIVOT
+      NEXT_PUBLIC_APP_NAME: AI Agent
     ports:
       - "3000:3000"
     depends_on:

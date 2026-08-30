@@ -3,6 +3,8 @@ from __future__ import annotations
 
 from pydantic import BaseModel, EmailStr, Field
 
+from app.schemas._types import UUIDStr
+
 
 class RegisterRequest(BaseModel):
     email: EmailStr
@@ -28,7 +30,7 @@ class TokenResponse(BaseModel):
 
 
 class UserPublic(BaseModel):
-    id: str
+    id: UUIDStr
     email: EmailStr
     full_name: str
     avatar_url: str | None = None

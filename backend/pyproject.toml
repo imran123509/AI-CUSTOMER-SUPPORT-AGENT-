@@ -1,7 +1,7 @@
 [project]
 name = "unfyd-pivot-backend"
 version = "0.1.0"
-description = "UNFYD.PIVOT — AI Customer Support Backend"
+description = "AI Agent — AI Customer Support Backend"
 requires-python = ">=3.11"
 
 [tool.pytest.ini_options]
